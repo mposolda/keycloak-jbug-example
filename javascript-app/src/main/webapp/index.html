@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Javascript orders app</title>
+        <script>
+            var loadOrders = function () {
+
+                var url = '/rest-app/orders';
+
+                var req = new XMLHttpRequest();
+                req.open('GET', url, true);
+                req.setRequestHeader('Accept', 'application/json');
+
+                req.onreadystatechange = function () {
+                    if (req.readyState == 4) {
+                        if (req.status == 200) {
+                            var orders = JSON.parse(req.responseText);
+                            var html = '<b>Orders: </b><br>';
+                            for (var i = 0; i < orders.length; i++) {
+                                var currentOrder = orders[i];
+                                html += 'OrderId: ' + currentOrder.orderId + ', description: ' + currentOrder.orderDescription + '<br>';
+                            }
+                            document.getElementById('orders').innerHTML = html;
+                        }  else {
+                            document.getElementById('orders').innerHTML = '<b>Failed to load orders from backend. Status: ' + req.status + '</b>';
+                        }
+                    }
+                }
+
+                req.send();
+            };
+        </script>
+    </head>
+    <body>
+       <h1>Javascript application for downloading orders from backend rest service</h1>
+       <div id="orders"></div>
+       <button onclick="loadOrders()">Load orders</button>
+    </body>
+
+</html>
