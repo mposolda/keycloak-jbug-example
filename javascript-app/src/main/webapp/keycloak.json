@@ -1,0 +1,8 @@
+{
+  "realm": "demo",
+  "realm-public-key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCRFrz41lTEiFgnCtXza7Z9rI+uvJxj6euxE1HGSzAGy9xQRh8v/nUHiZW2Nv/AKRVq+n6AMoPFxCX8wWASvKf1jEwe1wvf+JdRs3ZHgTb/weN0rLmqJhlzYmiKkaCUWL5KSYMdzXqVl8g4q06aNyEBsuXO8ZKMRZnV7b7KsdAINQIDAQAB",
+  "auth-server-url": "http://localhost:8080/auth",
+  "ssl-required": "external",
+  "resource": "javascript-app",
+  "public-client": true
+}

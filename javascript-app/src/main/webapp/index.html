@@ -1,7 +1,18 @@
 <html>
     <head>
         <title>Javascript orders app</title>
+        <script src="/auth/js/keycloak.js"></script>
         <script>
+            var keycloak = new Keycloak('keycloak.json');
+
+            keycloak.init({ onLoad: 'login-required' }).success(function(authenticated) {
+                if (authenticated) {
+                    alert('my username: ' + keycloak.tokenParsed.preferred_username);
+                }
+            }).error(function() {
+                alert('failed to initialize');
+            });
+
             var loadOrders = function () {
 
                 var url = '/rest-app/orders';
@@ -9,6 +20,7 @@
                 var req = new XMLHttpRequest();
                 req.open('GET', url, true);
                 req.setRequestHeader('Accept', 'application/json');
+                req.setRequestHeader('Authorization', 'Bearer ' + keycloak.token);
 
                 req.onreadystatechange = function () {
                     if (req.readyState == 4) {

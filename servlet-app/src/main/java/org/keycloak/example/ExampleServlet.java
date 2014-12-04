@@ -16,6 +16,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.keycloak.KeycloakPrincipal;
 
 /**
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
@@ -35,8 +36,12 @@ public class ExampleServlet extends HttpServlet {
         PrintWriter writer = resp.getWriter();
         writer.println("<h1>Servlet application retrieving list of orders from backend rest-app</h1>");
 
+        req.isUserInRole("user");
+        KeycloakPrincipal principal = (KeycloakPrincipal) req.getUserPrincipal();
+        String token = principal.getKeycloakSecurityContext().getTokenString();
+
         try {
-            List<Order> orders = readOrdersFromRestApp();
+            List<Order> orders = readOrdersFromRestApp(token);
             writer.println("");
             for (Order order : orders) {
                 writer.println(order + "<br>");
@@ -49,10 +54,12 @@ public class ExampleServlet extends HttpServlet {
         writer.close();
     }
 
-    private List<Order> readOrdersFromRestApp() throws OrderRetrieveException {
+    private List<Order> readOrdersFromRestApp(String token) throws OrderRetrieveException {
         DefaultHttpClient client = new DefaultHttpClient();
         try {
             HttpGet get = new HttpGet("http://localhost:8080/rest-app/orders");
+            get.addHeader("Authorization", "Bearer " + token);
+
             HttpResponse response = client.execute(get);
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new OrderRetrieveException("Can't load data from rest-app. Status : " + response.getStatusLine().getStatusCode());
